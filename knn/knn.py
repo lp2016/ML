@@ -1,9 +1,11 @@
 import heapq
+import numpy as np
 import itertools
 import operator
 import math
 from vis import visualize
 from functools import wraps
+from loadData import file2matrix
 
 #这里是原作者的信息，我只是用来学习。。。
 __author__ = u'Stefan Kögl <stefan@skoegl.net>'
@@ -71,11 +73,6 @@ class Node(object):
         for c, pos in self.children:
             if child == c:
                 return pos
-
-
-    def __repr__(self):
-        return '<%(cls)s - %(data)s>' % \
-            dict(cls=self.__class__.__name__, data=repr(self.data))
 
 
     def __nonzero__(self):
@@ -172,7 +169,7 @@ class KDNode(Node):
 
         # We sort the final result by the distance in the tuple
         # (<KdNode>, distance).
-        return [(node, -d) for d, _, node in sorted(results, reverse=True)]
+        return [(node.data, -d) for d, _, node in sorted(results, reverse=True)]
 
     """
     注意了，先按步骤找到叶结点，然后回朔的时候要做两件事，
@@ -292,20 +289,47 @@ def check_dimensionality(point_list, dimensions=None):
 
     return dimensions
 
+def predict(result2,label):
+    c1 = c2 = c3 = 0
+    for i in range(k):
+        if label[point.index(result2[i][0])] == 'didntLike':
+            c1 = c1 + 1
+        elif label[point.index(result2[i][0])] == 'smallDoses':
+            c2 = c2 + 1
+        else:
+            c3 = c3 + 1
+    if c1 > c2 and c1 > c3:
+        c = 'didntLike'
+    elif c2 > c1 and c2 > c3:
+        c = 'smallDoses'
+    else:
+        c = 'largeDoses'
+    print('you will probably like this perpon :', c)
+
 
 if __name__ == '__main__':
-    #emptyTree = create(dimensions=3)
+    """
     point1=[2,3]
     point2 =[5,4]
     point3 = [9,6]
     point4 = [4,7]
     point5 = [8,1]
     point6 = [7,2]
-
     point=[point1,point2,point3,point4,point5,point6]
     tree=create(point)
     visualize(tree)                  # checck the tree
     #result=tree.search_nn((1,2))    #查找最近点，实际上是临近点的一种特殊形式，即只有一个邻近点
-    result2=tree.search_knn((5,6),2)
-    print(result2)
+    result=tree.search_knn((5,6),2)
+    print(result)
+    """
+    point,ranges,minVals,label=file2matrix(r'F:\machinelearning\ML\knn\dataset.txt')
+    point=point.tolist()
+    tree=create(point)
+    x = (28000,10.528555,1)
+    k=5
+    x = (x - minVals) / ranges
+    result2=tree.search_knn(x,k)
+    predict(result2,label)
+
+
 
