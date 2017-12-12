@@ -186,7 +186,7 @@ def predict(testData, decisionTree, labels):
         testData[feature_index] = 'other'
     tree = decisionTree[feature_label][testData[feature_index]]
     # 判断该树是叶子结点还是子结点
-    if (~isinstance(tree, dict)):  # 如果是叶子结点，则直接返回结果
+    if ( not isinstance(tree, dict)):  # 如果是叶子结点，则直接返回结果
         return tree
     else:  # 子结点则继续递归
         return predict(testData, tree, labels)
