@@ -1,3 +1,6 @@
+"""
+尚未增加剪枝函数，后续添加
+"""
 import operator
 import treePlotter
 from pylab import *
