@@ -91,6 +91,7 @@ def createTree(dataSet,labels,chooseBestFeatureToSplitFunc ):
     :param labels: 数据集每一维的名称
     :return: 决策树
     """
+
     classList = [example[-1] for example in dataSet] # 类别列表
     if classList.count(classList[0]) == len(classList): # 统计属于列别classList[0]的个数
         return classList[0] # 当类别完全相同则停止继续划分
